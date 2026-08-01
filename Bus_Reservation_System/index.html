@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon Lines - Premium Bus Travel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+</head>
+<body>
+    <div class="mesh-background">
+        <div class="color-orb orb-1"></div>
+        <div class="color-orb orb-2"></div>
+        <div class="color-orb orb-3"></div>
+    </div>
+    <div class="noise-overlay"></div>
+
+    <nav class="navbar reveal-down">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon"><i class='bx bxs-bus'></i></div>
+                <span>Horizon</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Explore</a></li>
+                <li><a href="#">Schedules</a></li>
+                <li><a href="#">Passes</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#" class="nav-link-login">Log In</a>
+                <a href="#" class="btn-primary-small">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="hero-section">
+        <div class="hero-content">
+            <div class="badge reveal-up">
+                <span class="badge-dot"></span> New Routes Available
+            </div>
+            <h1 class="hero-title reveal-up stagger-1">
+                Journey beyond <br>
+                the <span class="text-gradient">ordinary.</span>
+            </h1>
+            <p class="hero-subtitle reveal-up stagger-2">
+                Experience unparalleled comfort and state-of-the-art transit. Book your next destination with Horizon's seamless network.
+            </p>
+        </div>
+
+        <div class="search-container reveal-up stagger-3">
+            <div class="search-tabs">
+                <button class="tab active">One Way</button>
+                <button class="tab">Round Trip</button>
+            </div>
+            
+            <form class="search-form">
+                <div class="input-section">
+                    <div class="input-box">
+                        <label>Origin</label>
+                        <div class="input-field">
+                            <i class='bx bx-current-location'></i>
+                            <input type="text" placeholder="Where from?">
+                        </div>
+                    </div>
+
+                    <button type="button" class="swap-btn" aria-label="Swap locations">
+                        <i class='bx bx-transfer'></i>
+                    </button>
+
+                    <div class="input-box">
+                        <label>Destination</label>
+                        <div class="input-field">
+                            <i class='bx bx-map'></i>
+                            <input type="text" placeholder="Where to?">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="input-section secondary-inputs">
+                    <div class="input-box" id="date-box">
+                        <label>Departure</label>
+                        <div class="input-field">
+                            <i class='bx bx-calendar-alt'></i>
+                            <input type="text" id="date-picker" placeholder="Select Date" readonly>
+                        </div>
+                    </div>
+
+                    <div class="input-box" id="travelers-box">
+                        <label>Travelers</label>
+                        <div class="input-field cursor-pointer" id="travelers-trigger">
+                            <i class='bx bx-user'></i>
+                            <span id="travelers-text">1 Traveler</span>
+                            <i class='bx bx-chevron-down' style="margin-left: auto; color: var(--text-secondary);"></i>
+                        </div>
+                        
+                        <!-- Custom Dropdown -->
+                        <div class="travelers-dropdown" id="travelers-dropdown">
+                            <div class="traveler-type">
+                                <div class="traveler-info">
+                                    <span class="type-name">Adults</span>
+                                    <span class="type-desc">Age 13+</span>
+                                </div>
+                                <div class="counter">
+                                    <button type="button" class="btn-count minus" data-target="adults">-</button>
+                                    <span class="count-val" id="count-adults">1</span>
+                                    <button type="button" class="btn-count plus" data-target="adults">+</button>
+                                </div>
+                            </div>
+                            <div class="traveler-type">
+                                <div class="traveler-info">
+                                    <span class="type-name">Children</span>
+                                    <span class="type-desc">Age 2-12</span>
+                                </div>
+                                <div class="counter">
+                                    <button type="button" class="btn-count minus" data-target="children">-</button>
+                                    <span class="count-val" id="count-children">0</span>
+                                    <button type="button" class="btn-count plus" data-target="children">+</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-done" id="travelers-done">Done</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <span>Search</span>
+                    <i class='bx bx-right-arrow-alt'></i>
+                </button>
+            </form>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Initialize Flatpickr for the date picker
+            flatpickr("#date-picker", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                disableMobile: "true" // Ensures the custom UI works smoothly on mobile too
+            });
+
+            // 2. Custom Travelers Dropdown Logic
+            const travelersTrigger = document.getElementById('travelers-trigger');
+            const travelersDropdown = document.getElementById('travelers-dropdown');
+            const travelersText = document.getElementById('travelers-text');
+            const btnDone = document.getElementById('travelers-done');
+            
+            let counts = {
+                adults: 1,
+                children: 0
+            };
+
+            // Toggle dropdown
+            travelersTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                travelersDropdown.classList.toggle('show');
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!travelersTrigger.contains(e.target) && !travelersDropdown.contains(e.target)) {
+                    travelersDropdown.classList.remove('show');
+                }
+            });
+
+            // Handle counter buttons
+            const countBtns = document.querySelectorAll('.btn-count');
+            countBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // prevent closing the dropdown
+                    
+                    const isPlus = btn.classList.contains('plus');
+                    const target = btn.getAttribute('data-target');
+                    
+                    if (isPlus) {
+                        counts[target]++;
+                    } else {
+                        if (target === 'adults' && counts.adults > 1) {
+                            counts.adults--;
+                        } else if (target === 'children' && counts.children > 0) {
+                            counts.children--;
+                        }
+                    }
+                    
+                    updateTravelersUI();
+                });
+            });
+
+            // Done button closes the dropdown
+            btnDone.addEventListener('click', (e) => {
+                e.stopPropagation();
+                travelersDropdown.classList.remove('show');
+            });
+
+            // Update UI text and disable states
+            function updateTravelersUI() {
+                // Update DOM numbers
+                document.getElementById('count-adults').textContent = counts.adults;
+                document.getElementById('count-children').textContent = counts.children;
+
+                // Update button states
+                document.querySelector('.btn-count.minus[data-target="adults"]').disabled = counts.adults <= 1;
+                document.querySelector('.btn-count.minus[data-target="children"]').disabled = counts.children <= 0;
+
+                // Update trigger text
+                const total = counts.adults + counts.children;
+                travelersText.textContent = `${total} Traveler${total > 1 ? 's' : ''}`;
+            }
+
+            // Initialize UI state on load
+            updateTravelersUI();
+        });
+    </script>
+</body>
+</html>
